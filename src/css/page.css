@@ -1,0 +1,36 @@
+.container{
+  position:fixed;
+	 top:300px;
+	right:700px;
+}
+
+.left_button {
+    position:relative;
+    left:20px;
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 6px;
+    margin: 4px 2px;
+    cursor: pointer;
+    height: 20px;
+    width: 40px;
+}
+.right_button {
+    position:relative;
+    left:40px;
+    background-color: #008CBA;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 5px;
+    margin: 4px 2px;
+    cursor: pointer;
+    height: 20px;
+    width: 40px;
+}
