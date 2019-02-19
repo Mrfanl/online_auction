@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 
 import { updateActionlist } from '../redux/actionlist.redux';
 import getCookie from '../utils/getCookie'
-
+import getWeb3 from '../utils/getWeb3';
+import getContractInstance from '../utils/getContractInstance';
 
 class Auctionlist extends React.Component{
   constructor(props){
@@ -24,6 +25,8 @@ class Auctionlist extends React.Component{
       isSale:true,
       //下面用于商品修改的弹出框的设置
       visible:false,
+      //下面用于记录拍卖结束的时长
+      hour:0,
       ModalText:'Content of the modal',
       confirmLoading:false
     }
@@ -58,6 +61,8 @@ class Auctionlist extends React.Component{
         console.log(this.state)
         this.props.updateActionlist(this.state);
       }, 1000);
+
+      this.instantiateContract();
   }
 
   handleCancel = () => {
@@ -73,6 +78,17 @@ class Auctionlist extends React.Component{
     setTimeout(() => {
       this.props.updateActionlist(this.state);
     }, 1000);
+
+  }
+
+  instantiateContract(){
+  getWeb3.then(res=>{
+    res.web3.eth.getAccounts((error,accounts)=>{
+         getContractInstance.then(instance=>{
+           instance.startBusiness(this.state.user,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.hour*3600*1000,{from:accounts[0]});
+       })
+       })
+       })
   }
 
   onChange = (k,v) =>{
@@ -116,6 +132,8 @@ class Auctionlist extends React.Component{
     GPU:   <InputNumber style={{width:100}} min={1} max={200} defaultValue={this.state.gpu} onChange={(value)=>this.onChange('gpu',value)}/> 个<p/>
     内存:   <InputNumber style={{width:100}} min={1} max={100} defaultValue={this.state.memory} onChange={(value)=>this.onChange('memory',value)}/> GB<p/>
     带宽:   <InputNumber style={{width:100}} min={1} max={1000} defaultValue={this.state.band} onChange={(value)=>this.onChange('band',value)}/> M<p/>
+    时长：  <InputNumber style={{width:100}} min={1} max={1000} defaultValue={this.state.hour} onChange={(value)=>this.onChange('hour',value)}/> 小时<p/>
+
     </Modal>
     <Divider type="vertical"/>
     <Button type="primary" onClick={this.handleSale}>

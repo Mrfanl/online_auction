@@ -81,6 +81,8 @@ contract SimpleStorage{
 
             }));
         }
+        // 在用户提交订单时候就开始计算满足条件的拍卖分配
+        allocation();
     }
 
     //由供应商调用，代表上架拍卖品
@@ -99,30 +101,32 @@ contract SimpleStorage{
         uint log = 0;//在成功分配订单中的记录
 
         for(uint i=0;i<startedSupplier.length;i++){
-            Bid[] storage bs = bids[startedSupplier[i]];
-            sortbids(bs);
-            for(uint j=0;j<bs.length;j++){
-                uint[] memory sum ;//记录订单中虚拟机每部分的数量之和
-                sum[0] += bs[j].Cpu;
-                sum[1] += bs[j].Gpu;
-                sum[2] += bs[j].Memory;
-                sum[3] += bs[j].Band;
-                Business storage bus = business[startedSupplier[i]];
+            if(now>business[startedSupplier[i]].EndTime){
+                Bid[] storage bs = bids[startedSupplier[i]];
+                sortbids(bs);
+                for(uint j=0;j<bs.length;j++){
+                    uint[] memory sum ;//记录订单中虚拟机每部分的数量之和
+                    sum[0] += bs[j].Cpu;
+                    sum[1] += bs[j].Gpu;
+                    sum[2] += bs[j].Memory;
+                    sum[3] += bs[j].Band;
+                    Business storage bus = business[startedSupplier[i]];
 
-                if(sum[0]<=bus.Cpu&&sum[1]<=bus.Gpu&&sum[2]<=bus.Memory&&sum[3]<=bus.Band){
-                    successBids_ltera.successBids[bs[j].Name].push(bs[j]);
-                    successBids_ltera.successBids_lterable[log] = bs[j].Name;
-                    successBids_ltera.size++;
+                    if(sum[0]<=bus.Cpu&&sum[1]<=bus.Gpu&&sum[2]<=bus.Memory&&sum[3]<=bus.Band){
+                        successBids_ltera.successBids[bs[j].Name].push(bs[j]);
+                        successBids_ltera.successBids_lterable[log] = bs[j].Name;
+                        successBids_ltera.size++;
 
-                }else{
-                    sum[0] = 0;
-                    sum[1] = 0;
-                    sum[2] = 0;
-                    sum[3] = 0;
-                    break;
-                }
+                    }else{
+                        sum[0] = 0;
+                        sum[1] = 0;
+                        sum[2] = 0;
+                        sum[3] = 0;
+                        break;
+                    }
 
             }
+        }
         }
 
     }
@@ -159,10 +163,18 @@ contract SimpleStorage{
         }
     }
 
-   /* // 返回用户得到的资源分配
-    function getRource(string memory _user) public view returns(){
-        return successBids_ltera.successBids[_user];
-    } */
+   // 返回用户得到的资源分配, 如果分配为全0，就表示拍卖失败，反之拍卖成功并返回分配的资源数
+
+    function getRource(string memory _user,string memory _supplier) public view returns(uint,uint,uint,uint){
+        Bid[] storage successbidsarray = successBids_ltera.successBids[_user];
+        for(uint i=0;i<successbidsarray.length;i++){
+            string memory supplier = successbidsarray[i].Name;
+            if(keccak256(abi.encodePacked(supplier))== keccak256(abi.encodePacked(_supplier))){
+                return (successbidsarray[i].Cpu,successbidsarray[i].Gpu,successbidsarray[i].Memory,successbidsarray[i].Band);
+            }
+        }
+        return (0,0,0,0);
+    }
 
 
 

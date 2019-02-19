@@ -19,6 +19,8 @@ import {
 }from "bizcharts";
 
 import { insertAction,findOneAuction} from '../redux/auction.redux';
+import getWeb3 from '../utils/getWeb3';
+import getContractInstance from '../utils/getContractInstance';
 
 class Auction extends React.Component{
   constructor(props){
@@ -32,16 +34,21 @@ class Auction extends React.Component{
       memory:0,
       band:0,
       //与区块链交互的内容
-      cost:''
+      cost:'',
+      web3:''
     }
   }
 
   componentWillMount(){
-    this.setState({
-      supplier:this.props.match.params.supplier,
-      buyer:getCookie('user')
+    getWeb3.then(res=>{
+      this.setState({
+        supplier:this.props.match.params.supplier,
+        buyer:getCookie('user'),
+        web3:res.web3
+      })
     })
     this.props.findOneAuction(this.props.match.params.supplier)
+
   }
 
   onChange =(d,v)=>{
@@ -53,6 +60,19 @@ class Auction extends React.Component{
     console.log(this.state)
     this.props.insertAction(this.state)
     this.props.findOneAuction(this.state.supplier)
+    this.instantiateContract()
+  }
+
+  instantiateContract(){
+
+    this.state.web3.eth.getAccounts((error,accounts)=>{
+         getContractInstance.then(instance=>{
+          //将用户的订单提交到数据库
+           instance.bidding(this.state.supplier,this.state.buyer,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.cost,{from:accounts[0]
+           })
+
+         })
+       })
   }
 
   render(){
