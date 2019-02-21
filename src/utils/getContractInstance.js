@@ -1,7 +1,7 @@
 import getWeb3 from './getWeb3';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
 
-const contractAddress = '0xdd5e971f070ca650600dc0100fc08edb488cba7e'
+const contractAddress = '0xd1b2e5e7315db883dc1b6f55de9e9ce5788eb6fd'
 
 var contractInstance
 
@@ -12,4 +12,5 @@ var getContractInstance = getWeb3.then(res=>{
   contractInstance =  SimpleStorage.at(contractAddress)
   return contractInstance;
 })
+console.log(getContractInstance)
 export default getContractInstance

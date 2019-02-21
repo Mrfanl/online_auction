@@ -1,8 +1,8 @@
 import React from 'react'
 import { Avatar,Card,Tag } from 'antd';
-import getWeb3 from '../utils/getWeb3';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
 import getCookie from '../utils/getCookie';
+import getWeb3 from '../utils/getWeb3';
 import getContractInstance from '../utils/getContractInstance';
 
 const { Meta } = Card
@@ -20,7 +20,7 @@ class Personcenter extends React.Component{
     }
   }
 
- componentDidMount(){
+ componentWillMount(){
    getWeb3.then(res=>{
     this.setState({
       user:getCookie('user'),

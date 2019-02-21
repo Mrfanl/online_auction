@@ -68,26 +68,27 @@ Router.post('/findAuctionhistory',function(req,res){
 //修改供应商的库存信息，并将拍卖记录存至拍卖历史中
 Router.post('/auction',function(req,res){
   const { supplier,buyer,cpu,gpu,memory,band,cost} = req.body;
-  Actionlist.findOne({user:supplier},function(e,d){
-    if(e){
-      return res.json({code:1,msg:"后端出错"})
-    }
-    if(d){
-      if(cpu>d.cpu||gpu>d.gpu||memory>d.memory||band>d.band){
-        return res.json({code:1,msg:"小店没货了"})
-      }
-      Actionlist.update({user:supplier},{$set:{user:supplier,cpu:d.cpu-cpu,gpu:d.gpu-gpu,memory:d.memory-memory,band:d.band-band}},function(err,doc){
-        if(err){
-          return res.json({code:1,msg:"后端出错"})
-        }
-        if(doc){
-          console.log(doc)
-          console.log("拍卖品列表更新成功")
-        }
-      })
-    }
-  })
-  const actionModel = new Auctionhistory({ supplier,buyer,buytime:new Date(),cpu,gpu,memory,band,cost});
+  //Actionlist中只添加上架商品的数量，只有到拍卖结果出来才会改变库存，中间的操作不会改变库存信息
+  // Actionlist.findOne({user:supplier},function(e,d){
+  //   if(e){
+  //     return res.json({code:1,msg:"后端出错"})
+  //   }
+  //   if(d){
+  //     if(cpu>d.cpu||gpu>d.gpu||memory>d.memory||band>d.band){
+  //       return res.json({code:1,msg:"小店没货了"})
+  //     }
+  //     Actionlist.update({user:supplier},{$set:{user:supplier,cpu:d.cpu-cpu,gpu:d.gpu-gpu,memory:d.memory-memory,band:d.band-band}},function(err,doc){
+  //       if(err){
+  //         return res.json({code:1,msg:"后端出错"})
+  //       }
+  //       if(doc){
+  //         console.log(doc)
+  //         console.log("拍卖品列表更新成功")
+  //       }
+  //     })
+  //   }
+  // })
+  const actionModel = new Auctionhistory({supplier,buyer,buytime:new Date(),cpu,gpu,memory,band,cost});
   actionModel.save(function(e,doc){
     if(e){
       return res.json({code:1,msg:'后端出错'})

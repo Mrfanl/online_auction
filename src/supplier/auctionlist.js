@@ -14,13 +14,13 @@ class Auctionlist extends React.Component{
       //商家名字
       user:'',
       //cpu个数
-      cpu:1,
+      cpu:0,
       //gpu个数
-      gpu:1,
+      gpu:0,
       //内存容量
-      memory:'8',
+      memory:0,
       //带宽
-      band:'100',
+      band:0,
       //是否禁售
       isSale:true,
       //下面用于商品修改的弹出框的设置
@@ -118,7 +118,7 @@ class Auctionlist extends React.Component{
     </Card>
     <p/>
     <Button type="primary" onClick={this.showModal}>
-       修改商品
+       上架商品
     </Button>
     <Modal
       title="修改中"

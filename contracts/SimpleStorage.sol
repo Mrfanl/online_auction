@@ -1,3 +1,25 @@
+/*字段：
+  worthratio:各资源的价值之比
+  initBalance:初始金额
+  balanceOf：用户的账户信息
+  minter：合约的创建者
+  bids:每个供应商对应的投标（同一件商品的多个投标）
+  startedSupplier:记录有拍卖活动的供应商
+  business:每个供应商对应的上架商品信息
+  successBids_ltera:拍卖者对应的成功的投标
+
+  函数：
+  changeInitBalabce:改变初始金额
+  register：将用户信息注册到区块链上
+  getBalance:获取用户的账户信息
+  bidding：存储用户的投标信息
+  startBusiness:上架拍卖品，设置拍卖时间
+  getRource：返回用户得到的资源分配
+  allocation:分配资源
+  sortbids:每个订单根据单价的从高到低进行排序，用于资源分配
+  exchange:对成功拍卖的订单进行收费
+
+*/
 pragma solidity ^0.4.18;
 
 contract SimpleStorage{
@@ -41,6 +63,8 @@ contract SimpleStorage{
 
     Business_ltera successBids_ltera;//每个拍卖者成功的投标（可遍历）
 
+    mapping(string=>uint[]) res;
+
 
 
     constructor() public{
@@ -68,6 +92,8 @@ contract SimpleStorage{
         return balanceOf[_name];
     }
 
+
+
     //将用户的投标根据供应商的不同进行存储
     function bidding(string memory _supplier,string memory _name,uint _cpu,uint _gpu,uint _memory,uint _band,uint _cost) public {
         if(_cpu<=business[_supplier].Cpu&&_gpu<=business[_supplier].Gpu&&_memory<=business[_supplier].Memory&&_band<=business[_supplier].Band){
@@ -83,6 +109,7 @@ contract SimpleStorage{
         }
         // 在用户提交订单时候就开始计算满足条件的拍卖分配
         allocation();
+        exchange();
     }
 
     //由供应商调用，代表上架拍卖品
@@ -95,6 +122,36 @@ contract SimpleStorage{
         bus.EndTime = now + _time;
         startedSupplier.push(_supplier);
     }
+
+      // 返回用户得到的资源分配, 如果分配为全0，就表示拍卖失败，反之拍卖成功并返回分配的资源数
+    function setRource(string memory _user,string memory _supplier) public {
+        Bid[] storage successbidsarray = successBids_ltera.successBids[_user];
+        uint log = 0;
+        for(uint i =0;i<successbidsarray.length;i++){
+            string memory supplier = successbidsarray[i].Name;
+            if(keccak256(abi.encodePacked(supplier))== keccak256(abi.encodePacked(_supplier))){
+                res[_user].push(successbidsarray[i].Cpu);
+                res[_user].push(successbidsarray[i].Gpu);
+                res[_user].push(successbidsarray[i].Memory);
+                res[_user].push(successbidsarray[i].Band);
+                log = 1;
+            }
+
+        }
+        if(log == 0){
+            res[_user].push(0);
+            res[_user].push(0);
+            res[_user].push(0);
+            res[_user].push(0);
+    }
+
+    }
+
+    function getRource(string memory _user) public view returns(uint,uint,uint,uint){
+        return (res[_user][0],res[_user][1],res[_user][2],res[_user][3]);
+    }
+
+
 
     //分配资源,遍历bids
     function allocation() internal {
@@ -163,18 +220,53 @@ contract SimpleStorage{
         }
     }
 
-   // 返回用户得到的资源分配, 如果分配为全0，就表示拍卖失败，反之拍卖成功并返回分配的资源数
 
-    function getRource(string memory _user,string memory _supplier) public view returns(uint,uint,uint,uint){
-        Bid[] storage successbidsarray = successBids_ltera.successBids[_user];
-        for(uint i=0;i<successbidsarray.length;i++){
-            string memory supplier = successbidsarray[i].Name;
-            if(keccak256(abi.encodePacked(supplier))== keccak256(abi.encodePacked(_supplier))){
-                return (successbidsarray[i].Cpu,successbidsarray[i].Gpu,successbidsarray[i].Memory,successbidsarray[i].Band);
-            }
-        }
-        return (0,0,0,0);
-    }
+
+    // //查看用户拍卖是否成功
+    //  function isSucess(string memory _user,string memory _supplier) public  returns(bool){
+    //      uint a;
+    //      uint b;
+    //      uint c;
+    //      uint d;
+    //      (a,b,c,d) = getRource(_user,_supplier);
+    //      if(a==0 && b==0 && c==0 && d ==0 ){
+    //          return false;
+    //      }else{
+    //          return true;
+    //      }
+    //  }
+
+    //  //由于前端无法执行有多个返回值的函数，所以将每个资源分别返回
+
+    //  function getCpu(string memory _user,string memory _supplier)public returns(uint){
+    //      uint a;
+    //      (a,,,) = getRource(_user,_supplier);
+    //      return a;
+    //  }
+
+    //  function getGpu(string memory _user,string memory _supplier)public returns(uint){
+    //      uint a;
+    //      (,a,,) = getRource(_user,_supplier);
+    //      return a;
+    //  }
+
+    //  function getMemory(string memory _user,string memory _supplier)public returns(uint){
+    //      uint a;
+    //      (,,a,) = getRource(_user,_supplier);
+    //      return a;
+    //  }
+
+    //  function getBand(string memory _user,string memory _supplier)public returns(uint){
+    //      uint a;
+    //      (,,,a) = getRource(_user,_supplier);
+    //      return a;
+    //  }
+
+    //  function getBalance2(string memory _name) public view returns(uint){
+    //     return balanceOf[_name];
+    // }
+
+
 
 
 
