@@ -29,7 +29,7 @@ export function user(state=initState,action){
     case ERROR_MSG:
       return {...state,isAuth:false,msg:action.msg}
     case LOGIN_SUCCESS:
-      return {...state,...action.payload,isAuth:true,msg:'登录成功',redirectTo:action.payload.type}
+      return {...state,...action.payload,isAuth:true,msg:'登录成功',redirectTo:action.payload.type+'/auctionlist'}
     default:
     return state
   }

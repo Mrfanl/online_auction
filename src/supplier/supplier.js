@@ -64,17 +64,6 @@ class Supplier extends React.Component{
               <Icon type="user" />
               <span>个人中心</span>
            </Menu.Item>
-           <SubMenu
-             key="sub2"
-             title={<span><Icon type="team" /><span>Team</span></span>}
-           >
-             <Menu.Item key="6">Team 1</Menu.Item>
-             <Menu.Item key="8">Team 2</Menu.Item>
-           </SubMenu>
-           <Menu.Item key="9">
-             <Icon type="file" />
-             <span>File</span>
-           </Menu.Item>
           </Menu>
           </Sider>
           <Layout>
@@ -103,7 +92,7 @@ class Supplier extends React.Component{
               </div>
           </Content>
           <Footer style={{ textAlign: 'center' }}>
-            Ant Design ©2018 Created by Ant UED
+            云拍卖 ©2018 一个基于区块链的组合云拍卖系统
           </Footer>
         </Layout>
       </Layout>

@@ -85,7 +85,7 @@ class Auctionlist extends React.Component{
   getWeb3.then(res=>{
     res.web3.eth.getAccounts((error,accounts)=>{
          getContractInstance.then(instance=>{
-           instance.startBusiness(this.state.user,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.hour*3600*1000,{from:accounts[0]});
+           instance.startBusiness(this.state.user,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.hour*60,{from:accounts[0]});
        })
        })
        })

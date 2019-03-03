@@ -1,7 +1,7 @@
 import getWeb3 from './getWeb3';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
 
-const contractAddress = '0xd1b2e5e7315db883dc1b6f55de9e9ce5788eb6fd'
+const contractAddress = '0x435622795f10b5b5ce84eca54d1d06c2970657cd'
 
 var contractInstance
 

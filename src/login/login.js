@@ -44,13 +44,13 @@ class Login extends React.Component{
    <Layout className="layout">
    <Header className="header"><Header_com/></Header>
    <Layout>
-     <Content style={{'textAlign':'center','background':'#364d79','height': '500px','lineHeight': '500px','weight':'500px'}}>
+     <Content style={{'background':'#364d79','textAlign':'center'}}>
      <Content_com/>
      </Content>
 
      <Sider style={{lineHeight: '100%',width:'100%'}}>
      <Card title="登录"
-     style={{width:200,minHeight:500,'background':'#708090'}}
+     style={{width:200,minHeight:500,'background':'	#787878 '}}
      >
      <p style={{color:'#FF0000'}}>{this.props.msg}</p>
      <Input
