@@ -37,4 +37,3 @@ let getWeb3 = new Promise(function(resolve, reject) {
 })
 
 export default getWeb3
-//导出，在App.js中使用

@@ -6,10 +6,8 @@ class Header_com extends React.Component{
   constructor(props){
     super(props)
   }
-
   render(){
     return (
-
       <Menu
         theme="dark"
         mode="horizontal"
@@ -24,5 +22,4 @@ class Header_com extends React.Component{
     )
   }
 }
-
 export default Header_com

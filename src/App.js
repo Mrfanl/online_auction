@@ -12,21 +12,16 @@ import './css/oswald.css'
 import './css/open-sans.css'
 import './css/pure-min.css'
 import './App.css'
-
-
-
 const contractAddress = "0xa7d070d6b24db33492340dad8575bfc41ad7db80"
 
 class App extends Component {//这是什么标签，以及下面的constructor
   constructor(props) {
     super(props)
-
     this.state = {  //这里的this什么意思。App？
       storageValue: 0,
       web3: null,
     }
   }
-
   componentWillMount() {
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
@@ -103,13 +98,9 @@ class App extends Component {//这是什么标签，以及下面的constructor
     })
 
 */
-
-
-
-
   }
 
-  render() {//这个render()是一个什么样的特定函数，有什么功能
+  render() {
     return (
       <div className="App">
         <nav className="navbar pure-menu pure-menu-horizontal">
@@ -133,4 +124,4 @@ class App extends Component {//这是什么标签，以及下面的constructor
   }
 }
 
-export default App//这里到处的App后面由index.js 文件夹调用
+export default App

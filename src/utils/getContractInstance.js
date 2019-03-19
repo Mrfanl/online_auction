@@ -9,8 +9,9 @@ var getContractInstance = getWeb3.then(res=>{
   const contract = require('truffle-contract');
   const SimpleStorage = contract(SimpleStorageContract);
   SimpleStorage.setProvider(res.web3.currentProvider)
-  contractInstance =  SimpleStorage.at(contractAddress)
+  impleStorage.deployed().then((instance)={
+    contractInstance = instance;
+  })
   return contractInstance;
 })
-console.log(getContractInstance)
 export default getContractInstance

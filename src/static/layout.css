@@ -1,0 +1,49 @@
+
+
+.header-ul{
+   list-style-type: none;
+   padding-top: 1em;
+   padding-bottom: 1em;
+   margin-bottom: 0;
+   background:#24292e;
+
+}
+.header-li{
+   display: inline-block;
+    margin-right: 5%;
+    color:white;
+}
+.header-li a{
+  text-decoration: none;
+  color:white;
+}
+
+.header-search{
+  padding-top: 0;
+  display: inline-block;
+  margin-left: 30%;
+  margin-right: 5%;
+}
+
+.login-content{
+  background-color: rgb(20, 49, 55);
+  background-size: cover;
+  margin:0;
+  padding:0;
+  height: 100%;
+	width: 100%;
+}
+.login-ul{
+  list-style-type: none;
+}
+.login-li{
+  display: inline-block;
+  margin-bottom: 13em;
+  margin-top: 5em;
+  width:50%
+}
+.footer-content{
+  text-align: center;
+  font-weight:50;
+  letter-spacing:10px;
+}

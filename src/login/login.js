@@ -1,89 +1,77 @@
-import React from 'react'
-import { Input,Icon,Button} from 'antd'
-import '../css/page.css'
-import { Layout,Card} from 'antd';
-import {connect} from 'react-redux'
-import {Redirect} from 'react-router-dom'
+import React from 'react';
+import { Button,Card,Input,Icon} from 'antd';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
 
-import Header_com from '../component/header'
-import Footer_com from '../component/footer'
-import Content_com from '../component/content'
-import {login} from '../redux/user.redux'
-
-const { Header, Footer, Sider, Content } = Layout;
-
+import Header_Com from '../component/header_com';
+import Footer_Com from '../component/footer_com';
+import { login } from '../redux/user.redux';
+import '../static/layout.css';
 
 class Login extends React.Component{
   constructor(props){
-    super(props)
+    super(props);
     this.state={
       user:'',
       password:''
     }
   }
 
- handleChange(d,v){
-   this.setState({
-     [d]:v
-   })
- }
- handleLogin(){
-    this.props.login(this.state)
- }
+  handleChange=(d,v)=>{
+    this.setState({
+      [d]:v
+    });
+  }
 
-
-  handleRegister=(e)=>{
-    this.props.history.push('/register')
+  handleLogin=()=>{
+    this.props.login(this.state);
   }
 
   render(){
-    // const suffix = user?<Icon type="close-circle" onClick={this.emitEmpty}/>:null
-    return (
-   <div>
-   {this.props.redirectTo?<Redirect to={this.props.redirectTo}/>:null}
-   <Layout className="layout">
-   <Header className="header"><Header_com/></Header>
-   <Layout>
-     <Content style={{'background':'#364d79','textAlign':'center'}}>
-     <Content_com/>
-     </Content>
+    return(
+      <div>
+      {this.props.redirectTo?<Redirect to={this.props.redirectTo}/>:null}
+      <Header_Com/>
+        <div className="login-content">
+        <ul className="login-ul">
+          <li
+          className="login-li"
 
-     <Sider style={{lineHeight: '100%',width:'100%'}}>
-     <Card title="登录"
-     style={{width:200,minHeight:500,'background':'	#787878 '}}
-     >
-     <p style={{color:'#FF0000'}}>{this.props.msg}</p>
-     <Input
-     size='small'
-     placeholder='请输入你的用户名'
-     prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
-
-     onChange={v=>this.handleChange('user',v.target.value)}
-     >
-     </Input>
-
-     <p/>
-     <Input
-     size='small'
-     type='password'
-     placeholder='请输入你的密码'
-     prefix={<Icon type='lock' style={{color: 'rgba(0,0,0,.25)'}}/>}
-     onChange={v=>this.handleChange('password',v.target.value)}
-     ></Input>
-     <p/>
-     <br/>
-     <Button  onClick={this.handleLogin.bind(this)}>登录</Button>
-     <Button  onClick={this.handleRegister.bind(this)}>注册</Button>
-      </Card>
-      </Sider>
-
-   </Layout>
-
-   <Footer><Footer_com/></Footer>
- </Layout>
- </div>
+          >
+          </li>
+          <li className="login-li">
+            <Card
+            title="登录页面"
+            style={{'width':'70%'}}
+            >
+            <p className="msg">{this.props.msg}</p>
+            <p>用户名</p>
+            <Input
+            prefix={ <Icon type="user" style={{ color:'#08c' }} /> }
+            placeholder="username"
+            onChange={e=>this.handleChange("user",e.target.value)}
+            />
+            <p/>
+            <p>密码</p>
+            <Input.Password
+            prefix={<Icon type="lock" style={{ color: '#08c' }} />}
+            placeholder="Password"
+            onChange={e=>this.handleChange("password",e.target.value)}
+            />
+            <p/>
+            <p>
+            <Button type="primary" style={{'marginLeft':'20px','marginRight':'20px','marginTop':'2em'}} onClick={()=>this.handleLogin()}>登录</Button>
+            <a href="/register">未注册？点击这里注册</a></p>
+            </Card>
+          </li>
+        </ul>
+        </div>
+        <Footer_Com/>
+      </div>
     )
   }
 }
-Login = connect(state=>state.user,{login})(Login)
-export default Login
+
+Login = connect(state=>state.user,{ login })(Login);
+
+export default Login;

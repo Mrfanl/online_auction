@@ -1,16 +1,15 @@
-import React from 'react'
-import { Button,Input,Icon,Radio,Card } from 'antd'
-import { connect } from 'react-redux'
-import { Redirect } from 'react-router-dom'
-import { register } from '../redux/user.redux'
-import '../css/page.css'
-import './register.css'
+import React from 'react';
+import { Button,Input,Icon,Radio,Card } from 'antd';
+import { connect } from 'react-redux';
+import { Redirect } from 'react-router-dom';
+import { register } from '../redux/user.redux';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
 import getWeb3 from '../utils/getWeb3';
 import getContractInstance from '../utils/getContractInstance';
+import '../static/user.css';
 
 
-const RadioGroup = Radio.Group
+const RadioGroup = Radio.Group;
 
 class Register extends React.Component{
   constructor(props){
@@ -46,7 +45,6 @@ handleRegister = ()=>{
 }
 
 instantiateContract(){
-
   this.state.web3.eth.getAccounts((error,accounts)=>{
        getContractInstance.then(instance=>{
          instance.register(this.state.user,{from:accounts[0]}).then(results=>{
@@ -56,47 +54,49 @@ instantiateContract(){
      })
 }
 
-
-
-
   render(){
     return (
       <div>
        {this.props.redirectTo?<Redirect to={this.props.redirectTo}/>:null}
-      <Card title="注册"
-      style={{width:'200px',position:'absolute',top:'20%',left:'40%'}}>
+      <Card
+      style={{
+        'width':'300',
+        'position': 'absolute',
+        'left': '50%',
+        'top':'50%',
+        'transform': 'translate(-50%,-50%)'
+      }}
+      title="注册">
     <p style={{color:'#FF0000'}}>{this.props.msg}</p>
      <Input
      size='small'
      placeholder='请输入你的用户名'
-     prefix={<Icon type="user" style={{color: 'rgba(0,0,0,.25)'}}/>}
+     prefix={<Icon type="user" style={{ color:'#08c' }} />}
      onChange={v=>this.handleChange('user',v.target.value)}
      >
      </Input>
 
      <p/>
-     <Input
-     size='small'
-     type='password'
-     placeholder='请输入你的密码'
-     prefix={<Icon type='lock' style={{color: 'rgba(0,0,0,.25)'}}/>}
-     onChange={v=>this.handleChange('password',v.target.value)}
-     ></Input>
+     <Input.Password
+        prefix={<Icon type="lock" style={{ color: '#08c' }} />}
+        placeholder="Password"
+        onChange={e=>this.handleChange("password",e.target.value)}
+        />
 
      <p/>
-     <Input
-     size='small'
-     type='password'
-     placeholder='请确认你的密码'
-     prefix={<Icon type='lock' style={{color: 'rgba(0,0,0,.25)'}}/>}
-     onChange={v=>this.handleChange('repassword',v.target.value)}
-     ></Input>
+     <Input.Password
+        prefix={<Icon type="lock" style={{ color: '#08c' }} />}
+         placeholder="Password"
+         onChange={e=>this.handleChange("repassword",e.target.value)}
+         />
      <p/>
-     <RadioGroup  onChange={v=>this.handleChange('type',v.target.value)}>
+     <RadioGroup  onChange={e=>this.handleChange('type',e.target.value)}>
          <Radio  value={"buyer"}>拍卖者</Radio>
          <Radio  value={"provider"}>供应商</Radio>
      </RadioGroup>
-     <Button onClick={this.handleRegister.bind(this)}>注册</Button>
+     <p/>
+     <Button type="primary" style={{'marginRight':'20px'}} onClick={this.handleRegister.bind(this)}>注册</Button>
+     <a href="/login">已注册？点击这里登录</a>
      </Card>
      </div>
     )

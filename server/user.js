@@ -2,8 +2,6 @@ const express = require('express')
 const util = require('utility')
 
 const Router = express.Router()
-
-
 //获取数据表
 const model = require('./model')
 const User = model.getModel('user')
@@ -12,10 +10,7 @@ const Auctionhistory = model.getModel('auctionhistory')
 
 //用于密码过滤
 const _filter={'password':0,'__v':0}
-
 var UserID=2
-
-
 //注册
 Router.post('/register',function(req,res){
   const {user,password,type} = req.body
@@ -64,7 +59,6 @@ Router.post('/findAuctionhistory',function(req,res){
   }
 
 })
-
 //修改供应商的库存信息，并将拍卖记录存至拍卖历史中
 Router.post('/auction',function(req,res){
   const { supplier,buyer,cpu,gpu,memory,band,cost} = req.body;
