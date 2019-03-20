@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input,Button,Card} from 'antd';
+import { Input,Button,Card,Statistic} from 'antd';
 import { connect } from 'react-redux';
 import getCookie from '../utils/getCookie'
 import {
@@ -21,6 +21,8 @@ import {
 import { insertAction,findOneAuction} from '../redux/auction.redux';
 import getWeb3 from '../utils/getWeb3';
 import getContractInstance from '../utils/getContractInstance';
+
+const Countdown = Statistic.Countdown;
 
 class Auction extends React.Component{
   constructor(props){
@@ -48,7 +50,6 @@ class Auction extends React.Component{
       })
     })
     this.props.findOneAuction(this.props.match.params.supplier)
-
   }
 
   onChange =(d,v)=>{
@@ -66,7 +67,7 @@ class Auction extends React.Component{
   instantiateContract(){
 
     this.state.web3.eth.getAccounts((error,accounts)=>{
-         getContractInstance.then(instance=>{
+         getContractInstance().then(instance=>{
           //将用户的订单提交到数据库
            instance.bidding(this.state.supplier,this.state.buyer,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.cost,{from:accounts[0]
            })
@@ -76,7 +77,7 @@ class Auction extends React.Component{
   }
 
   render(){
-
+    const deadline =this.props.duration_time;//拍卖截止时间
     return (
       <div>
       <Card title={`${this.props.match.params.supplier}的在售商品`} bordered={false} style={{ width:'100%'}}>
@@ -84,16 +85,16 @@ class Auction extends React.Component{
       <p>GPU: {this.props.gpu} 个</p>
       <p>内存：{this.props.memory} GB</p>
       <p>带宽：{this.props.band} M</p>
+      <Countdown title="Day Level" value={deadline} format="H 时 m 分 s 秒"/>
       </Card>
       <Input placeholder="cpu" style={{width:'50%'}} onChange={(e)=>this.onChange("cpu",e.target.value)}/><p/>
       <Input placeholder="gpu" style={{width:'50%'}} onChange={(e)=>this.onChange("gpu",e.target.value)}/><p/>
       <Input placeholder="memory" style={{width:'50%'}} onChange={(e)=>this.onChange("memory",e.target.value)}/><p/>
       <Input placeholder="band" style={{width:'50%'}} onChange={(e)=>this.onChange("band",e.target.value)}/><p/>
       <Input placeholder="cost" style={{width:'50%'}} onChange={(e)=>this.onChange("cost",e.target.value)}/><p/>
-
       <Button type="primary" onClick={()=>this.summit()}>提交</Button>
       </div>
-    )
+    );
   }
 }
 

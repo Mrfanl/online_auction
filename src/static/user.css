@@ -8,3 +8,8 @@
 .msg{
   color:red
 }
+div.alter-password{
+  width:50%;
+  margin-left: 20%;
+  margin-top: 1em;
+}

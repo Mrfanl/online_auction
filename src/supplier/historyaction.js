@@ -4,10 +4,8 @@ import {connect} from 'react-redux';
 
 import {findAuctionhistory} from '../redux/auctionhistory.redux';
 import getCookie from '../utils/getCookie';
-
 import getWeb3 from '../utils/getWeb3';
 import getContractInstance from '../utils/getContractInstance';
-
 
 class Historyaction extends React.Component{
   constructor(props){
@@ -20,13 +18,10 @@ class Historyaction extends React.Component{
       isSucess:false//用于指明拍卖是否成功
     }
   }
-
   componentWillMount(){
     this.props.findAuctionhistory(this.state.user,this.state.mark);
 
   }
-
-
   showModal = (id,buyer)=>{
     this.setState({
       visible:true,
@@ -34,23 +29,20 @@ class Historyaction extends React.Component{
     })
     this.instantiateContract(buyer)
   }
-
   handleok = (e)=>{
     this.setState({
       visible:false
     })
   }
-
   handleCancel = (e) => {
   this.setState({
     visible: false,
   });
 }
-
 instantiateContract(buyer){
 getWeb3.then(res=>{
   res.web3.eth.getAccounts((error,accounts)=>{
-       getContractInstance.then(instance=>{
+       getContractInstance().then(instance=>{
          instance.setRource(buyer,this.state.user,{from:accounts[0]})
          instance.getRource(buyer,{from:accounts[0]}).then(res=>{
            if(Number(res[0].c)!==0|Number(res[1].c)!==0|Number(res[2].c)!==0|Number(res[3].c)!==0){
@@ -60,13 +52,12 @@ getWeb3.then(res=>{
            }else{
              this.setState({
                isSucess:false
-             })
+             });
            }
-
-         })
-       })
-     })
-     })
+         });
+       });
+     });
+   });
 }
 
   render(){

@@ -27,29 +27,31 @@ class Register extends React.Component{
     getWeb3.then(res=>{
       this.setState({
         web3:res.web3
-      })
-    })
+      });
+    });
  }
 
 
   handleChange(d,v){
   this.setState({
     [d]:v
-  })
+  });
 }
 
 handleRegister = ()=>{
    this.instantiateContract();
-    this.props.register(this.state);
+  this.props.register(this.state);
 
 }
 
 instantiateContract(){
+
   this.state.web3.eth.getAccounts((error,accounts)=>{
-       getContractInstance.then(instance=>{
+       getContractInstance().then(instance=>{
+         console.log(instance);
          instance.register(this.state.user,{from:accounts[0]}).then(results=>{
          console.log('已经在链上注册完毕');
-       })
+       });
      })
      })
 }

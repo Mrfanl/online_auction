@@ -1,12 +1,12 @@
 import React from 'react';
 import { List, Avatar,Icon,Modal,Tag} from 'antd';
+import moment from "moment";//处理时间的格式
 import {connect} from 'react-redux';
 
 import {findAuctionhistory} from '../redux/auctionhistory.redux';
 import getCookie from '../utils/getCookie';
 import getWeb3 from '../utils/getWeb3';
 import getContractInstance from '../utils/getContractInstance';
-
 
 class Historyaction extends React.Component{
   constructor(props){
@@ -28,8 +28,6 @@ class Historyaction extends React.Component{
     this.props.findAuctionhistory(this.state.user,this.state.mark);
 
   }
-
-
   showModal = (id,supplier)=>{
     this.setState({
       visible:true,
@@ -53,7 +51,7 @@ class Historyaction extends React.Component{
 instantiateContract(supplier){
 getWeb3.then(res=>{
   res.web3.eth.getAccounts((error,accounts)=>{
-       getContractInstance.then(instance=>{
+       getContractInstance().then(instance=>{
          instance.setRource(this.state.user,supplier,{from:accounts[0]})
          instance.getRource(this.state.user,{from:accounts[0]}).then(res=>{
            console.log(res)
@@ -66,22 +64,19 @@ getWeb3.then(res=>{
            if(Number(res[0].c)!==0|Number(res[1].c)!==0|Number(res[2].c)!==0|Number(res[3].c)!==0){
              this.setState({
                isSucess:true
-             })
+             });
            }else{
              this.setState({
                isSucess:false
-             })
+             });
            }
-
-         })
-       })
-     })
-     })
+         });
+       });
+     });
+   });
 }
-
   render(){
     const data = this.props.historylist;
-
     return(
       <div>
       {this.props.historylist==0?<img style={{right:'50%'}} src="/empty.PNG" alt="Big Boat"/>:
@@ -93,7 +88,7 @@ getWeb3.then(res=>{
               <List.Item.Meta
                 avatar={<Avatar style={{ backgroundColor: '#87d068' }} icon="file-done" />}
                 title={item.supplier}
-                description={`拍卖时间：${item.buytime}`}
+                description={`拍卖时间：${moment((data[this.state.num].buytime).favTime).format('YYYY-MM-DD HH:mm')}`}
               />
             </List.Item>
           )}
@@ -105,20 +100,21 @@ getWeb3.then(res=>{
            onOk={this.handleok}
            onCancel={this.handleCancel}
         >
+
         {data.length!==0?<div>
           <Tag color='blue'>店铺：</Tag> {data[this.state.num].supplier}<p/>
           <br/>
-          <Tag color='blue'>cpu：</Tag>  {this.state.isSucess?data[this.state.num].cpu:this.state.cpu}<p/>
+          <Tag color='blue'>cpu：</Tag>  {data[this.state.num].cpu}<p/>
           <br/>
-          <Tag color='blue'>gpu：</Tag>  {this.state.isSucess?data[this.state.num].gpu:this.state.gpu}<p/>
+          <Tag color='blue'>gpu：</Tag>  {data[this.state.num].gpu}<p/>
           <br/>
-          <Tag color='blue'>内存：</Tag>  {this.state.isSucess?data[this.state.num].memory:this.state.memory}<p/>
+          <Tag color='blue'>内存：</Tag>  {data[this.state.num].memory}<p/>
           <br/>
-          <Tag color='blue'>带宽: </Tag>  {this.state.isSucess?data[this.state.num].band:this.state.band}<p/>
+          <Tag color='blue'>带宽: </Tag>  {data[this.state.num].band}<p/>
           <br/>
-          <Tag color='blue'>花费：</Tag>  {this.state.isSucess?data[this.state.num].cost:0}<p/>
+          <Tag color='blue'>花费：</Tag>  {data[this.state.num].cost}<p/>
           <br/>
-          <Tag color='blue'>时间: </Tag>  {data[this.state.num].buytime}<p/>
+          <Tag color='blue'>时间: </Tag>  {moment((data[this.state.num].buytime).favTime).format('YYYY-MM-DD')}<p/>
           <br/>
           <Tag color='blue'>拍买成功: </Tag>  {this.state.isSucess?'是':'否'}<p/>
           </div>:null}

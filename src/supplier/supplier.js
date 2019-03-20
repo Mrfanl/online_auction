@@ -23,27 +23,22 @@ class Supplier extends React.Component{
   }
   this.handleClick.bind(this);
     }
-
     componentWillMount(){
       this.setState({
         user:getCookie('user')
       })
     }
-
     handleClick(e){
       this.setState({
         linkroute:'/provider'+pathlist[e.key-1]
       })
     }
-
   handleLogout(){
     browserCookie.erase('user')//清除cookie
     window.location.href = window.location.href
-
   }
 
   render(){
-
     return (
       <div>
 

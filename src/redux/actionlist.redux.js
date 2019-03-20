@@ -15,6 +15,8 @@ const initState = {
   memory:'8',
   //带宽
   band:'100',
+  //拍卖持续时间
+  duration_time:'',
   //是否销售
   isSale:true,
   //查询数据库内正在出售的供应商
@@ -25,11 +27,8 @@ export function actionlist(state=initState,action){
   switch(action.type){
     case UPDTEACTION_SUCCESS:
       return {...state,...action.payload}
-
     case QUERY_SUCCESS:
       return {...state,auctionlist:action.payload}
-
-
     default:
     return state
   }
@@ -54,11 +53,10 @@ export function queryActionlist(){
   }
 }
 
-
 //供应商更新货物信息
-export function updateActionlist({user,cpu,gpu,memory,band,isSale}){
+export function updateActionlist({user,cpu,gpu,memory,band,duration_time,isSale}){
   return dispatch =>{
-    axios.post('/user/actionlist',{user,cpu,gpu,memory,band,isSale}).then(res=>{
+    axios.post('/user/actionlist',{user,cpu,gpu,memory,band,duration_time,isSale}).then(res=>{
       if(res.status==200&&res.data.code===0){
         dispatch(updateSuccess(res.data.data))
       }

@@ -113,6 +113,7 @@ Router.post('/findOneAuction',function(req,res){
       return res.json({code:1,msg:'后端出错'})
     }
     if(doc){
+      console.log(doc);
       return res.json({code:0,data:doc})
     }
   })
@@ -120,7 +121,7 @@ Router.post('/findOneAuction',function(req,res){
 
 //
 Router.post('/actionlist',function(req,res){
-  const {user,cpu,gpu,memory,band,isSale} = req.body
+  const {user,cpu,gpu,memory,band,isSale,duration_time} = req.body
   Actionlist.findOne({user},function(err,doc){
     if(err){
       return res.json({code:1,msg:"后端出错"})
@@ -135,12 +136,12 @@ Router.post('/actionlist',function(req,res){
         }
       })
     }else{
-    const actionlistModel = new Actionlist({user:user,cpu:cpu,user:user,cpu:cpu,gpu:gpu,memory:memory,band:band,isSale:isSale})
+    const actionlistModel = new Actionlist({user:user,cpu:cpu,user:user,cpu:cpu,gpu:gpu,memory:memory,band:band,isSale:isSale,duration_time:duration_time})
     actionlistModel.save(function(e,d){
       if(e){
         return res.json({code:1,msg:"后端出错"})
       }else{
-        return res.json({code:0,data:{user:user,cpu:cpu,user:user,cpu:cpu,gpu:gpu,memory:memory,band:band,isSale:isSale}})
+        return res.json({code:0,data:{user:user,cpu:cpu,user:user,cpu:cpu,gpu:gpu,memory:memory,band:band,isSale:isSale,duration_time:duration_time}})
       }
   })
 }

@@ -16,6 +16,7 @@ const models={
     'gpu':{type:Number,require:true},
     'memory':{type:Number,require:true},
     'band':{type:Number,require:true},
+    'duration_time':{type:Number,require:true},
     'isSale':{type:Boolean}
   },
   auctionhistory:{

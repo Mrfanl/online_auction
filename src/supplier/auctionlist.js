@@ -2,10 +2,12 @@ import React from 'react';
 import { Card,Modal,Button,Divider,InputNumber,Input} from 'antd';
 import { connect } from 'react-redux';
 
-import { updateActionlist } from '../redux/actionlist.redux';
+import { updateActionlist} from '../redux/actionlist.redux';
+import { findOneAuction } from '../redux/auction.redux';
 import getCookie from '../utils/getCookie'
 import getWeb3 from '../utils/getWeb3';
 import getContractInstance from '../utils/getContractInstance';
+
 
 class Auctionlist extends React.Component{
   constructor(props){
@@ -21,12 +23,13 @@ class Auctionlist extends React.Component{
       memory:0,
       //带宽
       band:0,
+
+      //下面用于记录拍卖结束的时长
+      duration_time:0,
       //是否禁售
       isSale:true,
       //下面用于商品修改的弹出框的设置
       visible:false,
-      //下面用于记录拍卖结束的时长
-      hour:0,
       ModalText:'Content of the modal',
       confirmLoading:false
     }
@@ -34,6 +37,14 @@ class Auctionlist extends React.Component{
   componentWillMount(){
     this.setState({
       user:getCookie('user')
+    });
+    this.props.findOneAuction(getCookie('user'));
+    this.setState({
+      cpu:this.props.auction.cpu,
+      gpu:this.props.auction.gpu,
+      memory:this.props.auction.memory,
+      band:this.props.auction.band,
+      duration_time:this.props.auction.duration_time
     })
   }
 
@@ -84,17 +95,23 @@ class Auctionlist extends React.Component{
   instantiateContract(){
   getWeb3.then(res=>{
     res.web3.eth.getAccounts((error,accounts)=>{
-         getContractInstance.then(instance=>{
-           instance.startBusiness(this.state.user,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.hour*60,{from:accounts[0]});
+         getContractInstance().then(instance=>{
+           instance.startBusiness(this.state.user,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,(this.state.duration_time-Date.Now())/1000,{from:accounts[0]});
        })
        })
        })
   }
 
   onChange = (k,v) =>{
-    this.setState({
-      [k]:v
-    })
+    if(k=="duration_time")
+      this.setState({
+        [k]:v*3600*1000+Date.now()
+      })
+    else{
+      this.setState({
+        [k]:v
+      })
+    }
   }
 
   changeName = (value) =>{
@@ -102,9 +119,6 @@ class Auctionlist extends React.Component{
       user:value
     })
   }
-
-
-
   render(){
     const { cpu,gpu,memory,band } = this.state
     return (
@@ -132,7 +146,7 @@ class Auctionlist extends React.Component{
     GPU:   <InputNumber style={{width:100}} min={1} max={200} defaultValue={this.state.gpu} onChange={(value)=>this.onChange('gpu',value)}/> 个<p/>
     内存:   <InputNumber style={{width:100}} min={1} max={100} defaultValue={this.state.memory} onChange={(value)=>this.onChange('memory',value)}/> GB<p/>
     带宽:   <InputNumber style={{width:100}} min={1} max={1000} defaultValue={this.state.band} onChange={(value)=>this.onChange('band',value)}/> M<p/>
-    时长：  <InputNumber style={{width:100}} min={1} max={1000} defaultValue={this.state.hour} onChange={(value)=>this.onChange('hour',value)}/> 小时<p/>
+    时长：  <InputNumber style={{width:100}} min={1} max={1000} defaultValue={this.state.hour} onChange={(value)=>this.onChange('duration_time',value)}/> 小时<p/>
 
     </Modal>
     <Divider type="vertical"/>
@@ -145,6 +159,6 @@ class Auctionlist extends React.Component{
   }
 }
 
-Auctionlist = connect(state=>state,{updateActionlist})(Auctionlist)
+Auctionlist = connect(state=>state,{updateActionlist,findOneAuction})(Auctionlist)
 
 export default Auctionlist;
