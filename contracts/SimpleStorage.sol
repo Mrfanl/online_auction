@@ -107,17 +107,15 @@ contract SimpleStorage{
             }));
         }
         // 在用户提交订单时候就开始计算满足条件的拍卖分配
-        allocation();
-        exchange();
     }
 
-    //分配资源,遍历bids
-    function allocation() internal {
+    //分配资源,由供应商调用,遍历bids
+    function allocation() public {
         uint log = 0;//在成功分配订单中的记录
         for(uint i=0;i<startedSupplier.length;i++){
             if(now>business[startedSupplier[i]].EndTime){
                 Bid[] storage bs = bids[startedSupplier[i]];
-                sortbids(bs);
+                //sortbids(bs);
                 for(uint j=0;j<bs.length;j++){
                     uint[] memory sum ;//记录订单中虚拟机每部分的数量之和
                     sum[0] += bs[j].Cpu;
@@ -130,6 +128,7 @@ contract SimpleStorage{
                         successBids_ltera.successBids_lterable[log] = bs[j].Name;
                         successBids_ltera.size++;
                         log = log +1;//记录每个成功拍卖订单的编号
+                        delete business[startedSupplier[i]];
                     }else{
                         sum[0] = 0;
                         sum[1] = 0;
@@ -138,6 +137,7 @@ contract SimpleStorage{
                         break;
                     }
                   }
+
               }
          }
     }
@@ -183,16 +183,16 @@ contract SimpleStorage{
         }
     }
 
-    //对成功拍卖的订单进行收费给供应商
-    function exchange() internal{
-       successBids_ltera.size;
+    //对成功拍卖的订单进行收费给供应商,由供应商调用
+    function exchange() public{
+       //successBids_ltera.size;
         for(uint i=0;i<successBids_ltera.size;i++){
             string memory _user = successBids_ltera.successBids_lterable[i];
-            Bid[] storage bids = successBids_ltera.successBids[_user];//用户的投标
+            Bid[] storage _bids = successBids_ltera.successBids[_user];//用户的投标
             uint costSum = 0;
-            for(uint j=0;j<bids.length;j++){
-                costSum = costSum+bids[j].Cost;
-                balanceOf[bids[j].Name] += bids[j].Cost;
+            for(uint j=0;j<_bids.length;j++){
+                costSum = costSum+_bids[j].Cost;
+                balanceOf[_bids[j].Name] +=  _bids[j].Cost;
             }
             balanceOf[_user] -= costSum;
         }

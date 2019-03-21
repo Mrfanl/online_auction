@@ -10,7 +10,7 @@ function getContract(){
 }
 export default function getContractInstance(){
 return getContract().then(SimpleStorage=>{
-   var promise = SimpleStorage.deployed().then((instance)=>{
+   var promise = SimpleStorage.deployed({gas:6012388012}).then((instance)=>{
           return instance;
         });
     return promise;

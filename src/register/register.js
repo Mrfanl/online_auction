@@ -22,7 +22,6 @@ class Register extends React.Component{
      web3:''
    }
   }
-
   componentDidMount(){
     getWeb3.then(res=>{
       this.setState({
@@ -31,26 +30,21 @@ class Register extends React.Component{
     });
  }
 
-
   handleChange(d,v){
   this.setState({
     [d]:v
   });
 }
-
 handleRegister = ()=>{
    this.instantiateContract();
-  this.props.register(this.state);
-
 }
-
 instantiateContract(){
-
   this.state.web3.eth.getAccounts((error,accounts)=>{
        getContractInstance().then(instance=>{
          console.log(instance);
          instance.register(this.state.user,{from:accounts[0]}).then(results=>{
          console.log('已经在链上注册完毕');
+         this.props.register(this.state);
        });
      })
      })
@@ -77,14 +71,12 @@ instantiateContract(){
      onChange={v=>this.handleChange('user',v.target.value)}
      >
      </Input>
-
      <p/>
      <Input.Password
         prefix={<Icon type="lock" style={{ color: '#08c' }} />}
         placeholder="Password"
         onChange={e=>this.handleChange("password",e.target.value)}
         />
-
      <p/>
      <Input.Password
         prefix={<Icon type="lock" style={{ color: '#08c' }} />}

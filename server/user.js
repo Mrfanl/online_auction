@@ -19,7 +19,6 @@ Router.post('/register',function(req,res){
       return res.json({code:1,msg:"后端出错"})
     }
     if(doc){
-      console.log('用户名重复')
       return res.json({code:1,msg:"用户名重复"})
     }
     const userModel = new User({user:user,password:MD5(password),type:type,ID:UserID})
@@ -28,7 +27,6 @@ Router.post('/register',function(req,res){
         return res.json({code:1,msg:"后端出错"})
       }else{
         UserID+=1
-
         return res.json({code:0,data:{user,password,type,ID:UserID-1}})
       }
     })
@@ -99,7 +97,6 @@ Router.post('/getActionlist',function(req,res){
       return res.json({code:1,msg:'后端出错'})
     }
     if(doc){
-      console.log(doc)
       return res.json({code:0,data:doc})
     }
   })
@@ -113,13 +110,12 @@ Router.post('/findOneAuction',function(req,res){
       return res.json({code:1,msg:'后端出错'})
     }
     if(doc){
-      console.log(doc);
       return res.json({code:0,data:doc})
     }
   })
 })
 
-//
+//更新供应商的商品上架情况
 Router.post('/actionlist',function(req,res){
   const {user,cpu,gpu,memory,band,isSale,duration_time} = req.body
   Actionlist.findOne({user},function(err,doc){
@@ -127,7 +123,7 @@ Router.post('/actionlist',function(req,res){
       return res.json({code:1,msg:"后端出错"})
     }
     if(doc){
-      Actionlist.update({user:user},{$set:{user:user,cpu:cpu,user:user,cpu:cpu,gpu:gpu,memory:memory,band:band,isSale:isSale}},function(err,doc){
+      Actionlist.updateOne({user:user},{$set:{user:user,cpu:cpu,user:user,cpu:cpu,gpu:gpu,memory:memory,band:band,duration_time:duration_time,isSale:isSale}},function(err,doc){
         if(err){
           return res.json({code:1,msg:"后端出错"})
         }

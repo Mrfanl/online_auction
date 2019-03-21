@@ -1,5 +1,5 @@
 import React from 'react';
-import { Input,Button,Card,Statistic} from 'antd';
+import { Input,Button,Card,Statistic,Row,Col} from 'antd';
 import { connect } from 'react-redux';
 import getCookie from '../utils/getCookie'
 import {
@@ -65,15 +65,13 @@ class Auction extends React.Component{
   }
 
   instantiateContract(){
-
     this.state.web3.eth.getAccounts((error,accounts)=>{
-         getContractInstance().then(instance=>{
-          //将用户的订单提交到数据库
-           instance.bidding(this.state.supplier,this.state.buyer,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.cost,{from:accounts[0]
-           })
-
-         })
-       })
+       getContractInstance().then(instance=>{
+        //将用户的订单提交到数据库
+         instance.bidding(this.state.supplier,this.state.buyer,this.state.cpu,this.state.gpu,this.state.memory,this.state.band,this.state.cost,{from:accounts[0]
+         });
+       });
+     });
   }
 
   render(){
@@ -81,12 +79,19 @@ class Auction extends React.Component{
     return (
       <div>
       <Card title={`${this.props.match.params.supplier}的在售商品`} bordered={false} style={{ width:'100%'}}>
-      <p>CPU: {this.props.cpu} 个</p>
-      <p>GPU: {this.props.gpu} 个</p>
-      <p>内存：{this.props.memory} GB</p>
-      <p>带宽：{this.props.band} M</p>
-      <Countdown title="Day Level" value={deadline} format="H 时 m 分 s 秒"/>
+      <Row gutter={16}>
+          <Col span={6}>
+            <p>CPU: {this.props.cpu} 个</p>
+            <p>GPU: {this.props.gpu} 个</p>
+            <p>内存：{this.props.memory} GB</p>
+            <p>带宽：{this.props.band} M</p>
+          </Col>
+          <Col span={6}>
+           <Countdown title="距拍卖结束还剩：" value={deadline} format="H 时 m 分 s 秒"/>
+          </Col>
+      </Row>
       </Card>
+
       <Input placeholder="cpu" style={{width:'50%'}} onChange={(e)=>this.onChange("cpu",e.target.value)}/><p/>
       <Input placeholder="gpu" style={{width:'50%'}} onChange={(e)=>this.onChange("gpu",e.target.value)}/><p/>
       <Input placeholder="memory" style={{width:'50%'}} onChange={(e)=>this.onChange("memory",e.target.value)}/><p/>
